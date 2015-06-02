@@ -12,6 +12,8 @@
 #include "abc.h"
 #include "cv.h"
 #include "highgui.h"
+using namespace std;
+using namespace cv;
 
 static unsigned char dataShow[320*240*3];	//界面右上角用来显示的数组
 static BITMAPINFOHEADER bih;
@@ -35,7 +37,9 @@ long int center_msy;//abc.h中返回的center,表示（x,y)那点对应在矩阵里的位置
 //const openni::DepthPixel* pDepth;
 IplImage *showxy_msy;
 IplImage *showxz_msy;
+
 ///////////////
+
 
 CDataProcess::CDataProcess()
 {
@@ -140,7 +144,21 @@ static int n = 0;
 /*处理已经旋转变换的数据                                                */
 /************************************************************************/
 void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
-{
+{   
+	///////creat windows
+	cvNamedWindow("win02", 0);
+
+	//cvNamedWindow("pOut02", 0);
+	//cvNamedWindow("pOut01", 0);
+	CvSize size; //=  cvGetSize(BGR);//得到摄像头图像大小
+	size.height = 480;
+	size.width = 640;
+	pOut01 = cvCreateImage(size, 8, 3);
+	pOut02 = cvCreateImage(size, 8, 3);
+	pCannyImg1 = cvCreateImage(size, 8, 3);
+	char key = 0;
+	showxy_msy = cvCreateImage(size, 8, 3);
+	showxz_msy = cvCreateImage(size, 8, 3);
 	//////////////////////////////////////////////
 	//示例：文本输出到多行列表
 	/*CString strTmp;
@@ -194,13 +212,14 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 		{
 			if (i>28 && i<453 && j>64 && j < 577)
 			{
-				temp = 512 * i + j;
+				//temp = 512 * i + j;
 				DepthBuf_O[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
 				DepthBuf_O_msy[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				temp = temp + 1;
 			}
 			else
 			{
-				DepthBuf_O[i][j] =0;
+  				DepthBuf_O[i][j] =0;
 				DepthBuf_O_msy[i][j] = 0;
 			}
 		
