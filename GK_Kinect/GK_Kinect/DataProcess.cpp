@@ -204,7 +204,7 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 	/////////////////////////////////
 	int i = 0, j = 0;
 	long int temp = 0;
-	tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
+	//tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
 
 	for (i = 0; i<480; i++)//the method is wrong
 	{
@@ -213,8 +213,8 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 			if (i>28 && i<453 && j>64 && j < 577)
 			{
 				//temp = 512 * i + j;
-				DepthBuf_O[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
-				DepthBuf_O_msy[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				DepthBuf_O[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				DepthBuf_O_msy[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
 				temp = temp + 1;
 			}
 			else
@@ -226,7 +226,7 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 		}
 	}
 
-
+	bool_max_connectivity_analyze2_1_OBJ();
 
 
 
