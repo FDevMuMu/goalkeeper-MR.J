@@ -1,8 +1,41 @@
 #include "stdafx.h"
 #include "DataProcess.h"
+#include <stdlib.h>
+#include <iostream>
+#include <string>
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv/cv.h"  
+#include "opencv/highgui.h"  
+#include "CamConstantSet.h"
+#include "abc.h"
+#include "cv.h"
+#include "highgui.h"
 
 static unsigned char dataShow[320*240*3];	//界面右上角用来显示的数组
 static BITMAPINFOHEADER bih;
+////variable from abc.h
+unsigned int DepthBuf_O_T[DEPTH_VISION_CAM_HEIGHT][DEPTH_VISION_CAM_WIDTH];
+unsigned int  area_grow_data_obj[DEPTH_VISION_CAM_HEIGHT*DEPTH_VISION_CAM_WIDTH][3];
+int connect_area_s_e_w[100000][3];//[100000][3];//[DEPTH_VISION_CAM_HEIGHT*DEPTH_VISION_CAM_WIDTH][3];//存储1000个连通域的 首 尾 标号 [首]connect_area_s_e[n][0] [尾]connect_area_s_e[n][1] [重量]connect_area_s_e[n][2]
+int Num_track_L;//存储当前被跟踪连通体的个数
+int Z_min_diff_set = 100;	  //联通域链接深度差（距离多远的东西认为是不同的物体）							
+IplImage *pOut01;
+IplImage *pOut02;
+
+int DepthBuf_O[480][640];//原深度图
+int DepthBuf_O_msy[480][640];//测参数用深度图
+IplImage *pCannyImg1;
+unsigned short *tempp;
+long int xx = 0;
+long int yy = 0;
+long int msy = 0;
+long int center_msy;//abc.h中返回的center,表示（x,y)那点对应在矩阵里的位置
+//const openni::DepthPixel* pDepth;
+IplImage *showxy_msy;
+IplImage *showxz_msy;
+///////////////
 
 CDataProcess::CDataProcess()
 {
@@ -151,4 +184,31 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 	}
 	}*/
 	/////////////////////////////////
+	int i = 0, j = 0;
+	long int temp = 0;
+	tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
+
+	for (i = 0; i<480; i++)//the method is wrong
+	{
+		for (j = 0; j<640; j++)
+		{
+			if (i>28 && i<453 && j>64 && j < 577)
+			{
+				temp = 512 * i + j;
+				DepthBuf_O[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				DepthBuf_O_msy[i][j] = tempp[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+			}
+			else
+			{
+				DepthBuf_O[i][j] =0;
+				DepthBuf_O_msy[i][j] = 0;
+			}
+		
+		}
+	}
+
+
+
+
+
 }
