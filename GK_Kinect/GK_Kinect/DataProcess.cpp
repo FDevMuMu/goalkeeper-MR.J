@@ -137,14 +137,6 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 	strTmp.Format(L"正在处理原始数据 a= %d", a);
 	PrintDis(strTmp);*/
 	///////////////////////////////////////////////
-}
-
-static int n = 0;
-/************************************************************************/
-/*处理已经旋转变换的数据                                                */
-/************************************************************************/
-void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
-{   
 	///////creat windows
 	cvNamedWindow("win02", 0);
 
@@ -159,6 +151,43 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 	char key = 0;
 	showxy_msy = cvCreateImage(size, 8, 3);
 	showxz_msy = cvCreateImage(size, 8, 3);
+
+	int i = 0, j = 0;
+	long int temp = 0;
+	//tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
+
+	for (i = 0; i<480; i++)
+	{
+		for (j = 0; j<640; j++)
+		{
+			if (i>0 && i<424 && j>0 && j < 512)
+			{
+				//temp = 512 * i + j;
+				DepthBuf_O[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				DepthBuf_O_msy[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+				temp = temp + 1;
+			}
+
+			else
+			{
+				DepthBuf_O[i][j] = 0;
+				DepthBuf_O_msy[i][j] = 0;
+			}
+
+		}
+	}
+
+	bool_max_connectivity_analyze2_1_OBJ();
+}
+
+static int n = 0;
+
+/************************************************************************/
+/*处理已经旋转变换的数据                                                */
+/************************************************************************/
+void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
+{   
+	
 	//////////////////////////////////////////////
 	//示例：文本输出到多行列表
 	/*CString strTmp;
@@ -202,31 +231,7 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 	}
 	}*/
 	/////////////////////////////////
-	int i = 0, j = 0;
-	long int temp = 0;
-	//tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
 
-	for (i = 0; i<480; i++)//the method is wrong
-	{
-		for (j = 0; j<640; j++)
-		{
-			if (i>28 && i<453 && j>64 && j < 577)
-			{
-				//temp = 512 * i + j;
-				DepthBuf_O[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
-				DepthBuf_O_msy[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
-				temp = temp + 1;
-			}
-			else
-			{
-  				DepthBuf_O[i][j] =0;
-				DepthBuf_O_msy[i][j] = 0;
-			}
-		
-		}
-	}
-
-	bool_max_connectivity_analyze2_1_OBJ();
 
 
 
