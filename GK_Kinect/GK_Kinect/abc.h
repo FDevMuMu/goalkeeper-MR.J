@@ -10,7 +10,7 @@
 
 using namespace std;
 
-
+extern  unsigned char dataShow[320 * 240 * 3];	//界面右上角用来显示的数组
 extern unsigned int DepthBuf_O_T[DEPTH_VISION_CAM_HEIGHT][DEPTH_VISION_CAM_WIDTH];
 extern unsigned int  area_grow_data_obj[DEPTH_VISION_CAM_HEIGHT*DEPTH_VISION_CAM_WIDTH][3];
 extern int connect_area_s_e_w[100000][3];//[100000][3];//[DEPTH_VISION_CAM_HEIGHT*DEPTH_VISION_CAM_WIDTH][3];//存储1000个连通域的 首 尾 标号 [首]connect_area_s_e[n][0] [尾]connect_area_s_e[n][1] [重量]connect_area_s_e[n][2]
@@ -406,15 +406,15 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 /////////////////////////////////////////////////////////////////////////////////////////////////
 							//if ((((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))>90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))<110000))
 
-							/*if ((fabs(P_xy - 1)<1 * 0.15) && (fabs(P_area - 0.7854)<0.7854*0.15)&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))>90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))<110000))
-							{*/	//圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 					
+							if ((fabs(P_xy - 1)<1 * 0.15) && (fabs(P_area - 0.7854)<0.7854*0.15)&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))>90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))<110000))
+							{	//圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 					
 								//cout << "长宽比" << P_xy << " 面积比" << P_area << " 实际面积 " << connect_area_s_e_w[j][2] * X_step*Y_step << "中心点距离" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;
 /////////////////////////////////////////////////////以上内容输出长宽比，面积比，实际面积，中心距离////////////////////////////
 							
 								for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 								{
-									DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
-
+									//DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
+									dataShow[area_grow_data_obj[i][0] * 320 * 3 * 2 + area_grow_data_obj[i][1]] = 0xff;
 									center = (max_x + min_x) / 2 + (max_y + min_y) * 320;
 								}
 ///////////////////////////////把坐标等标记在图上MSY///////////////////////////////////////////
@@ -453,7 +453,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 								{
 									weight_msy / (float)((float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)
 								}*/
-							/*}*/
+							}
 
 						}
 					}
@@ -463,7 +463,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 				//	cvShowImage("canny1", pCannyImg1);
 #ifndef WIN01_MOUSE_SET
 				//cvShowImage("win01", pOut01);
-				cvShowImage("win02", pOut02);//将处理完的输出
+				//cvShowImage("win02", pOut02);//将处理完的输出
 				/*cvShowImage("msy_xy", showxy_msy);
 			    cvShowImage("msy_xz", showxz_msy);*/
 #endif

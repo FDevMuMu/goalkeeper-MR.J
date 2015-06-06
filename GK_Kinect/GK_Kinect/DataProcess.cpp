@@ -128,6 +128,9 @@ unsigned char B[DEPTH_WIDTH][DEPTH_HEIGHT];	//三维坐标点对应的彩色数据的蓝色分量
 /************************************************************************/
 /*处理未曾旋转变换的数据                                                */
 /************************************************************************/
+
+
+
 void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 {
 	//////////////////////////////////////////////
@@ -138,7 +141,7 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 	PrintDis(strTmp);*/
 	///////////////////////////////////////////////
 	///////creat windows
-	cvNamedWindow("win02", 0);
+	//cvNamedWindow("win02", 0);
 
 	//cvNamedWindow("pOut02", 0);
 	//cvNamedWindow("pOut01", 0);
@@ -147,38 +150,40 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 	size.width = 640;
 	pOut01 = cvCreateImage(size, 8, 3);
 	pOut02 = cvCreateImage(size, 8, 3);
-	pCannyImg1 = cvCreateImage(size, 8, 3);
+	//pCannyImg1 = cvCreateImage(size, 8, 3);
 	char key = 0;
-	showxy_msy = cvCreateImage(size, 8, 3);
-	showxz_msy = cvCreateImage(size, 8, 3);
+	//showxy_msy = cvCreateImage(size, 8, 3);
+	//showxz_msy = cvCreateImage(size, 8, 3);
+	
 
-	int i = 0, j = 0;
-	long int temp = 0;
-	//tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
+		int i = 0, j = 0;
+		long int temp = 0;
+		//tempp = (unsigned short*)in3DObj->depthD16[DEPTH_WIDTH*DEPTH_HEIGHT];
 
-	for (i = 0; i<480; i++)
-	{
-		for (j = 0; j<640; j++)
+		for (i = 0; i < 480; i++)
 		{
-			if (i>0 && i<424 && j>0 && j < 512)
+			for (j = 0; j<640; j++)
 			{
-				//temp = 512 * i + j;
-				DepthBuf_O[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
-				DepthBuf_O_msy[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
-				temp = temp + 1;
-			}
+				if (i>0 && i<424 && j>0 && j < 512)
+				{
+					//temp = 512 * i + j;
+					DepthBuf_O[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+					DepthBuf_O_msy[i][j] = in3DObj->depthD16[temp];//5 >> 3;//原始深度存入DepthBuf_O数组中
+					temp = temp + 1;
+				}
 
-			else
-			{
-				DepthBuf_O[i][j] = 0;
-				DepthBuf_O_msy[i][j] = 0;
-			}
+				else
+				{
+					DepthBuf_O[i][j] = 0;
+					DepthBuf_O_msy[i][j] = 0;
+				}
 
+			}
 		}
+
+		bool_max_connectivity_analyze2_1_OBJ();
 	}
 
-	bool_max_connectivity_analyze2_1_OBJ();
-}
 
 static int n = 0;
 
@@ -196,18 +201,18 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 
 	//////////////////////////////////
 	//示例：操作界面右上角黑色区域的显示
-	/*if (n>=240)
-	{
-	n = 0;
-	}
-	for (int i = 0; i < 320 * 3 ;i++)
-	{
-	if (i%3 == 2)
-	{
-	dataShow[n * 320 * 3*2 + i] = 0xff;
-	}
-	}
-	n++;*/
+	//if (n>=240)
+	//{
+	//n = 0;
+	//}
+	//for (int i = 0; i < 320 * 3 ;i++)
+	//{
+	//if (i%3 == 2)
+	//{
+	//dataShow[n * 320 * 3*2 + i] = 0xff;
+	//}
+	//}
+	//n++;
 	//////////////////////////////////
 	//示例：操作最后的3D显示
 
